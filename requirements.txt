@@ -1,0 +1,14 @@
+# Core simulation + training
+mujoco>=3.8
+mujoco-mjx>=3.8
+jax[cuda12]           # GPU: needs cuDNN — install via `pacman -S cudnn` on Arch
+flax>=0.12
+optax>=0.2
+numpy
+
+# Export
+onnx
+onnxruntime
+
+# Real-robot deployment (install separately from Unitree repo)
+# unitree_sdk2py  — git clone https://github.com/unitreerobotics/unitree_sdk2_python
