@@ -262,6 +262,7 @@ def _build_default_qpos(mj_model: mujoco.MjModel) -> jax.Array:
 
 def _find_xml() -> str:
     candidates = [
+        Path.home() / "Viscous/robotics/robodog/mujoco_menagerie/unitree_go2/go2_mjx.xml",
         Path.home() / "mujoco_menagerie/unitree_go2/go2_mjx.xml",
         Path("/usr/share/mujoco_menagerie/unitree_go2/go2_mjx.xml"),
     ]

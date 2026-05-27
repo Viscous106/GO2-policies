@@ -15,17 +15,18 @@ echo "=== Installing Python dependencies ==="
 # GPU: requires cuDNN. On Arch Linux: sudo pacman -S cudnn
 # Then: .venv/bin/pip install "jax[cuda12]"
 # Without cuDNN, training runs on CPU (slower but functional).
-.venv/bin/pip install "jax[cuda12_local]" 2>/dev/null || .venv/bin/pip install jax
+.venv/bin/pip install "jax[cuda12]" 2>/dev/null || .venv/bin/pip install jax
 
 echo "=== Cloning mujoco_menagerie (Go2 model) ==="
-if [ ! -d "$HOME/mujoco_menagerie" ]; then
-  git clone --depth=1 https://github.com/google-deepmind/mujoco_menagerie "$HOME/mujoco_menagerie"
+MENAGERIE="$HOME/Viscous/robotics/robodog/mujoco_menagerie"
+if [ ! -d "$MENAGERIE" ]; then
+  git clone --depth=1 https://github.com/google-deepmind/mujoco_menagerie "$MENAGERIE"
 fi
 
 echo "=== Verifying model loads ==="
 .venv/bin/python3 - <<'EOF'
 import mujoco, pathlib
-xml = pathlib.Path.home() / "mujoco_menagerie/unitree_go2/go2_mjx.xml"
+xml = pathlib.Path.home() / "Viscous/robotics/robodog/mujoco_menagerie/unitree_go2/go2_mjx.xml"
 m = mujoco.MjModel.from_xml_path(str(xml))
 print(f"Go2 model loaded: nq={m.nq}, nu={m.nu}, nv={m.nv}")
 EOF
