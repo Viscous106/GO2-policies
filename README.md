@@ -5,32 +5,57 @@ Trains at ~8000 fps on RTX 4080 Super with 4096 parallel envs.
 
 ---
 
-## Quick start on a new machine
+## Fresh Ubuntu setup (start here)
 
-### 1. Clone the repo (SSH or HTTPS)
+### 1. Check your GPU driver
+```bash
+nvidia-smi   # should show your GPU and driver version
+```
+If `nvidia-smi` is missing, install the driver first:
+```bash
+sudo apt install -y nvidia-driver-535   # or whichever is latest
+sudo reboot
+```
+
+### 2. Install system prerequisites
+```bash
+sudo apt update
+sudo apt install -y python3 python3-venv python3-pip git
+```
+
+### 3. Clone the repo
 ```bash
 git clone https://github.com/Yash-Virulkar/go2_sim2real   # replace with your actual URL
 cd go2_sim2real
 ```
 
-### 2. Install system prerequisites (Ubuntu)
-```bash
-sudo apt update
-sudo apt install -y python3 python3-venv python3-pip git build-essential
-```
-
-### 3. Run setup (creates venv, installs JAX + GPU deps, downloads Go2 model)
+### 4. Run setup
 ```bash
 bash setup.sh
 ```
 
-This installs into `.venv/` and clones the Go2 MuJoCo model to  
-`~/Viscous/robotics/robodog/mujoco_menagerie/unitree_go2/go2_mjx.xml`.  
-Requires CUDA 12.x driver (works with CUDA 13.x driver in compat mode).
+This does everything in one shot:
+- Creates `.venv/` with Python
+- Installs `mujoco`, `mujoco-mjx`, `jax[cuda12]` (includes cuDNN — no extra apt install needed), `flax`, `optax`
+- Clones the Go2 MuJoCo model to `../mujoco_menagerie/` (next to the repo)
+- Verifies the model loads correctly
 
-> **Ubuntu + CUDA note:** if `nvidia-smi` shows your driver but JAX doesn't see the GPU,
-> run `.venv/bin/pip install "jax[cuda12]"` — the bundled nvidia wheels handle cuDNN,
-> no `apt install cudnn` needed.
+Expected output at the end:
+```
+Go2 model loaded: nq=19, nu=12, nv=18
+Setup complete.
+```
+
+### 5. Verify GPU is working
+```bash
+.venv/bin/python3 -c "import jax; print(jax.devices())"
+# should print: [CudaDevice(id=0)]
+```
+
+If it prints `[CpuDevice(id=0)]` instead, your CUDA driver is not visible to JAX:
+```bash
+.venv/bin/pip install "jax[cuda12]" --upgrade
+```
 
 ---
 

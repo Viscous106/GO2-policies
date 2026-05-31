@@ -261,7 +261,10 @@ def _build_default_qpos(mj_model: mujoco.MjModel) -> jax.Array:
 
 
 def _find_xml() -> str:
+    # Search relative to this file first (works regardless of clone location)
+    _here = Path(__file__).resolve().parent.parent
     candidates = [
+        _here.parent / "mujoco_menagerie/unitree_go2/go2_mjx.xml",
         Path.home() / "Viscous/robotics/robodog/mujoco_menagerie/unitree_go2/go2_mjx.xml",
         Path.home() / "mujoco_menagerie/unitree_go2/go2_mjx.xml",
         Path("/usr/share/mujoco_menagerie/unitree_go2/go2_mjx.xml"),
